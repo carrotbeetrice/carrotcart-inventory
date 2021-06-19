@@ -1,5 +1,5 @@
 const Pool = require("pg").Pool;
-const db = require("../config/config").db;
+const db = require("../config").db;
 
 var pool;
 

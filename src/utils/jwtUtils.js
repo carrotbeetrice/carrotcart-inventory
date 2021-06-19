@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const jwtConfig = require("../config/config").jwt;
+const jwtConfig = require("../config").jwt;
 
 const authJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -8,7 +8,7 @@ const authJWT = (req, res, next) => {
     const token = authHeader.split(" ")[1];
 
     jwt.verify(token, jwtConfig.accessTokenSecret, (err, decoded) => {
-      if (err) return res.sendStatus(403);
+      if (err) return res.status(403).send(err);
       else {
         req.user = decoded.id;
         next();
