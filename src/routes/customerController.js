@@ -1,6 +1,5 @@
 const router = require("express").Router();
-const customerQueries = require("../db/customerQueries");
-const _ = require("underscore");
+const { getProfile, createProfile } = require("../db/customerQueries");
 
 /**
  * Create new profile
@@ -10,8 +9,7 @@ router.get("/new", (req, res) => {
     ...req.body,
     id: req.user,
   };
-  customerQueries
-    .createProfile(userData)
+  createProfile(userData)
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send(err));
 });
@@ -22,8 +20,7 @@ router.get("/new", (req, res) => {
 router.get("/", (req, res) => {
   const customerId = req.user;
 
-  customerQueries
-    .getProfile(customerId)
+  getProfile(customerId)
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send(err));
 });
