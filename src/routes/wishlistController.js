@@ -1,13 +1,12 @@
 const router = require("express").Router();
-const { getWishlist, addItem, removeItem } = require("../db/wishlistQueries");
+const { getWishlist, addOrDeleteItem } = require("../db/wishlistQueries");
 
 /**
  * Get wishlist
  */
 router.get("/", async (req, res) => {
-  const customerId = parseInt(req.user);
-
   try {
+    const customerId = parseInt(req.user);
     const wishlist = await getWishlist(customerId);
     wishlist.forEach((item) => {
       item.price = parseFloat(item.price);
@@ -23,26 +22,19 @@ router.get("/", async (req, res) => {
  * Add/delete item from wishlist
  */
 router.post("/", async (req, res) => {
-  const customerId = parseInt(req.user);
-  const productId = parseInt(req.body.productId);
-  const inWishlist = JSON.parse(String(req.body.inWishlist).toLowerCase());
   try {
-    if (inWishlist) {
-      // Delete item
-      const productCount = await removeItem(customerId, productId);
-      if (productCount === 0) {
-        return res.sendStatus(200);
-      } else {
-        throw new Error("Error removing item from wishlist");
-      }
+    const customerId = parseInt(req.user);
+    const productId = parseInt(req.body.productId);
+    const inWishlist = JSON.parse(String(req.body.inWishlist).toLowerCase());
+    const productCount = await addOrDeleteItem(customerId, productId);
+    if (inWishlist && productCount === 0) {
+      // Item deleted successfully
+      return res.sendStatus(200);
+    } else if (!inWishlist && productCount === 1) {
+      // Item added successfully
+      return res.sendStatus(201);
     } else {
-      // Add item
-      const productCount = await addItem(customerId, productId);
-      if (productCount === 1) {
-        return res.sendStatus(201);
-      } else {
-        throw new Error("Error adding item to wishlist");
-      }
+      throw new Error("Error adding/deleting item from wishlist");
     }
   } catch (err) {
     return res.status(500).send(err);

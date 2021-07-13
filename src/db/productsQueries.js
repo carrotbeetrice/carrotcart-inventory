@@ -20,7 +20,7 @@ module.exports = {
       );
     });
   },
-  getById: (productId, customerId) => {
+  getById: (customerId, productId) => {
     const text = "SELECT * FROM getProduct($1, $2)";
     const values = [productId, customerId];
     return new Promise((resolve, reject) => {
