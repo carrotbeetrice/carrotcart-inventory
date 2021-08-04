@@ -10,7 +10,7 @@ module.exports = {
   /**
    * API Port
    */
-  port: process.env.PORT || 5000,
+  port: process.env.PORT,
   /**
    * API configs
    */
@@ -34,10 +34,20 @@ module.exports = {
   /**
    * JWT secret
    */
-   jwt: {
+  jwt: {
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
     refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
     maxAccessTokenAge: "1h",
     maxRefreshTokenAge: "24h",
+  },
+  /**
+   * AWS S3 configs
+   */
+  s3: {
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    REGION: process.env.REGION,
+    BUCKET_NAME: process.env.BUCKET_NAME,
+    SIGNATURE_VERSION: process.env.SIGNATURE_VERSION,
   },
 };

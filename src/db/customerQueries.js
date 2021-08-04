@@ -10,13 +10,8 @@ module.exports = {
       .toParams();
 
     return new Promise((resolve, reject) => {
-      pool.query(
-        getProfileQuery.text,
-        getProfileQuery.values,
-        (err, result) => {
-          if (err) reject(err);
-          else return resolve(result.rows[0]);
-        }
+      pool.query(getProfileQuery.text, getProfileQuery.values, (err, result) =>
+        err ? reject(err) : resolve(result.rows[0])
       );
     });
   },
@@ -32,10 +27,23 @@ module.exports = {
       pool.query(
         createProfileQuery.text,
         createProfileQuery.values,
-        (err, result) => {
-          if (err) reject(err);
-          else return resolve(result.rows[0]);
-        }
+        (err, result) => (err ? reject(err) : resolve(result.rows[0]))
+      );
+    });
+  },
+  addOrUpdateProfilePhoto: (id, uri) => {
+    const addUpdatePhotoQuery = sql
+      .update("Customer")
+      .set("profilephotouri", uri)
+      .where("id", id)
+      .returning("id")
+      .toParams();
+
+    return new Promise((resolve, reject) => {
+      pool.query(
+        addUpdatePhotoQuery.text,
+        addUpdatePhotoQuery.values,
+        (err, result) => (err ? reject(err) : resolve(result.rows[0].id))
       );
     });
   },
