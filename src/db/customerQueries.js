@@ -20,14 +20,14 @@ module.exports = {
       .insert("Customer", userData)
       .onConflict("id")
       .doNothing()
-      .returning("COUNT(*)")
+      .returning("id")
       .toParams();
 
     return new Promise((resolve, reject) => {
       pool.query(
         createProfileQuery.text,
         createProfileQuery.values,
-        (err, result) => (err ? reject(err) : resolve(result.rows[0]))
+        (err, result) => (err ? reject(err) : resolve(result.rows[0].id))
       );
     });
   },

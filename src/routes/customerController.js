@@ -12,14 +12,26 @@ const upload = multer({ storage: storage });
 /**
  * Create new profile
  */
-router.get("/new", (req, res) => {
+router.post("/", (req, res) => {
   const userData = {
     ...req.body,
     id: req.user,
+    email: req.email,
+    joinedon: new Date(),
   };
+
   createProfile(userData)
-    .then((data) => res.send(data))
-    .catch((err) => res.status(500).send(err));
+    .then((data) => {
+      if (data === req.user) {
+        return res.sendStatus(201);
+      } else {
+        throw new Error("Error creating new user profile");
+      }
+    })
+    .catch((err) => {
+      console.debug(err);
+      return res.status(500).send(err);
+    });
 });
 
 /**
@@ -36,13 +48,15 @@ router.get("/", (req, res) => {
 /**
  * Edit profile
  */
+router.put("/", (req, res) => {
+  return res.sendStatus(501);
+});
 
 /**
  * Add/update profile photo
  */
 router.post("/avatar", upload.single("avatar"), async (req, res) => {
-  // req.file contains the profile photo
-  if (req.file == null) return res.status(500).send("File not uploaded.");
+  if (req.file == null) return res.status(500).send("File not found.");
 
   try {
     const imageKey = await uploadImage(

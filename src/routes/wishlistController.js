@@ -1,5 +1,9 @@
 const router = require("express").Router();
-const { getWishlist, addOrDeleteItem } = require("../db/wishlistQueries");
+const {
+  getWishlist,
+  addOrDeleteItem,
+  deleteItem,
+} = require("../db/wishlistQueries");
 
 /**
  * Get wishlist
@@ -36,6 +40,21 @@ router.post("/", async (req, res) => {
     } else {
       throw new Error("Error adding/deleting item from wishlist");
     }
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
+/**
+ * Delete item from wishlist
+ */
+router.delete("/:productId", async (req, res) => {
+  try {
+    const customerId = parseInt(req.user);
+    const productId = parseInt(req.params.productId);
+    const productCount = await deleteItem(customerId, productId);
+    if (productCount === 0) return res.sendStatus(200);
+    else return res.status(500).send("Error deleting item from wishlist");
   } catch (err) {
     return res.status(500).send(err);
   }

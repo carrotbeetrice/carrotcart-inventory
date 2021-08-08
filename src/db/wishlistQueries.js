@@ -19,4 +19,14 @@ module.exports = {
       );
     });
   },
+  deleteItem: (customerId, productId) => {
+    const text = "SELECT * FROM removeFromWishlist($1, $2)";
+    const values = [customerId, productId];
+
+    return new Promise((resolve, reject) => {
+      pool.query(text, values, (err, result) =>
+        err ? reject(err) : resolve(result.rows[0].productcount)
+      );
+    });
+  },
 };

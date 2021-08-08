@@ -10,7 +10,9 @@ const authJWT = (req, res, next) => {
     jwt.verify(token, jwtConfig.accessTokenSecret, (err, decoded) => {
       if (err) return res.status(403).send(err);
       else {
+        // console.log("JWT payload:", decoded);
         req.user = decoded.id;
+        req.email = decoded.email;
         next();
       }
     });

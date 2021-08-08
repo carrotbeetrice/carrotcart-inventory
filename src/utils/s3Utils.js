@@ -26,7 +26,7 @@ module.exports = {
           ContentType: mimetype,
           Key: imageKey,
           Body: buffer,
-          ACL: 'public-read',
+          ACL: "public-read",
         },
         (err, data) => {
           if (err) return reject(err);
@@ -39,15 +39,4 @@ module.exports = {
   getPublicUri: (key) => {
     return `https://s3-${REGION}.amazonaws.com/${BUCKET_NAME}/${key}`;
   },
-  // getSignedUrl: async (operation, key) => {
-  //     return new Promise((resolve, reject) => {
-  //       s3.getSignedUrl(operation, {
-  //           Bucket: BUCKET_NAME,
-  //           Key: key,
-  //       }, (err, url) => {
-  //           if (err) return reject(err);
-  //           else return resolve(url);
-  //       });
-  //     });
-  // }
 };
