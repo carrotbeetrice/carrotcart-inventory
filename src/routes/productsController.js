@@ -4,7 +4,7 @@ const { getById } = require("../db/productsQueries");
 router.get("/:productId", async (req, res) => {
   try {
     const productId = parseInt(req.params.productId);
-    const customerId = parseInt(req.user);
+    const customerId = req.user;
 
     const data = await getById(customerId, productId);
     return res.send(data);

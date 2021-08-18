@@ -11,7 +11,7 @@ const authJWT = (req, res, next) => {
       if (err) return res.status(403).send(err);
       else {
         // console.log("JWT payload:", decoded);
-        req.user = decoded.id;
+        req.user = parseInt(decoded.id);
         req.email = decoded.email;
         next();
       }

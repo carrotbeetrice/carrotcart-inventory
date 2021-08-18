@@ -10,7 +10,7 @@ const {
  */
 router.get("/", async (req, res) => {
   try {
-    const customerId = parseInt(req.user);
+    const customerId = req.user;
     const wishlist = await getWishlist(customerId);
     wishlist.forEach((item) => {
       item.price = parseFloat(item.price);
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
  */
 router.post("/", async (req, res) => {
   try {
-    const customerId = parseInt(req.user);
+    const customerId = req.user;
     const productId = parseInt(req.body.productId);
     const inWishlist = JSON.parse(String(req.body.inWishlist).toLowerCase());
     const productCount = await addOrDeleteItem(customerId, productId);
@@ -50,7 +50,7 @@ router.post("/", async (req, res) => {
  */
 router.delete("/:productId", async (req, res) => {
   try {
-    const customerId = parseInt(req.user);
+    const customerId = req.user;
     const productId = parseInt(req.params.productId);
     const productCount = await deleteItem(customerId, productId);
     if (productCount === 0) return res.sendStatus(200);
