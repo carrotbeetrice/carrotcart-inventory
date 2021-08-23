@@ -67,6 +67,7 @@ module.exports = {
       );
     });
   },
+  //TODO: Figure out what's wrong with this one
   updateAddress: (id, postalCode, newAddressDetails) => {
     const text = "SELECT * FROM updateAddress($1, $2, $3)";
     const values = [id, postalCode, newAddressDetails];

@@ -4,4 +4,5 @@ module.exports = (app) => {
   app.use("/category", require("./categoryController"));
   app.use("/products", require("./productsController"));
   app.use("/wishlist", require("./wishlistController"));
+  app.use("/cart", require("./cartController"));
 };
