@@ -19,15 +19,44 @@ router.get("/", async (req, res) => {
 });
 
 /**
+ * Delete from cart
+ */
+router.delete("/:productId", async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    if (isNaN(productId)) {
+      return res.status(400).send("Invalid product id");
+    }
+
+    await deleteFromCart(req.user, productId);
+    return res.sendStatus(200);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+});
+
+/**
+ * Request parameter validation for /:productId/:quantity path
+ */
+router.use("/:productId/:quantity", (req, res, next) => {
+  const { productId, quantity } = req.params;
+
+  if (isNaN(productId)) {
+    return res.status(400).send("Invalid product id");
+  } else if (isNaN(quantity)) {
+    return res.status(400).send("Invalid product quantity");
+  } else {
+    next();
+  }
+});
+
+/**
  * Add to cart
  */
 router.post("/:productId/:quantity", async (req, res) => {
   try {
     const { productId, quantity } = req.params;
-
-    if (productId == null) {
-      return res.status(400).send("Missing product id");
-    }
 
     const addResult = await addToCart(req.user, productId, quantity);
 
@@ -44,38 +73,12 @@ router.post("/:productId/:quantity", async (req, res) => {
 /**
  * Update cart
  */
-router.put("/:productId/:change", async (req, res) => {
+router.put("/:productId/:quantity", async (req, res) => {
   try {
-    const { productId, change } = req.params;
+    const { productId, quantity } = req.params;
 
-    if (productId == null) {
-      return res.status(400).send("Missing product id");
-    }
+    await updateCartItem(req.user, productId, quantity);
 
-    const updateResult = await updateCartItem(req.user, productId, change);
-
-    if (updateResult > 0) {
-      return res.sendStatus(200);
-    } else {
-      return res.status(500).send("Error updating cart");
-    }
-  } catch (err) {
-    return res.sendStatus(500);
-  }
-});
-
-/**
- * Delete from cart
- */
-router.delete("/:productId", async (req, res) => {
-  try {
-    const { productId } = req.params;
-
-    if (productId == null) {
-      return res.status(400).send("Missing product id");
-    }
-
-    await deleteFromCart(req.user, productId);
     return res.sendStatus(200);
   } catch (err) {
     return res.sendStatus(500);
